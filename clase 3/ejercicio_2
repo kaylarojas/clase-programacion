@@ -1,0 +1,35 @@
+# Generador de Fibonacci corregido
+
+def ejecutar_fibonacci():
+    print("Generador de Secuencia Fibonacci")
+    print("Escribe 'salir' para terminar\n")
+
+    while True:
+        entrada = input("¿Cuántos números deseas ver?: ")
+
+        if entrada.lower() == "salir":
+            print("Programa finalizado.")
+            break
+
+        try:
+            n = int(entrada)
+            
+            if n <= 0:
+                print("Valor inválido. Debe ser mayor a 0.")
+            else:
+                a, b = 0, 1
+                resultado = []
+                
+                for _ in range(n):
+                    resultado.append(str(a))
+                    a, b = b, a + b
+                
+                print("Salida:", " ".join(resultado))
+                
+        except ValueError:
+            print("Error: Por favor ingresa solo números enteros.")
+            
+        print("-" * 20)
+
+if __name__ == "__main__":
+    ejecutar_fibonacci()
