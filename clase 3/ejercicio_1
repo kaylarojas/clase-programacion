@@ -1,0 +1,28 @@
+# Verificador de Palíndromos Continuo
+
+def ejecutar_verificador():
+    print("Verificador de Palíndromos")
+    print("(Escribe 'salir' para terminar el programa)\n")
+
+    while True:
+    
+        entrada = input("Ingresa una palabra o frase: ")
+
+        # 2. Condición de salida
+        if entrada.lower() == "salir":
+            print("¡Hasta luego!")
+            break
+
+        texto_limpio = entrada.replace(" ", "").lower() 
+        
+        texto_invertido = texto_limpio[::-1]
+
+        if texto_limpio == texto_invertido:
+            print(f"Resultado: '{entrada}' Si un palíndromo.")
+        else:
+            print(f"Resultado: '{entrada}' No es un palíndromo.")
+        
+        print("-" * 30) # Línea divisoria para la siguiente vuelta
+
+if __name__ == "__main__":
+    ejecutar_verificador()
