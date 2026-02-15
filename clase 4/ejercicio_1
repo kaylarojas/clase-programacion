@@ -1,0 +1,49 @@
+# Analizador de Textos para Miguel de Cervantes XV
+
+def analizar_quijote():
+    print("Bienvenido al Analizador de 'El Quijote 2.0' ")
+    print("(Escribe 'salir' para cerrar el programa)\n")
+
+    ignoradas = ["el", "la", "de", "y", "a", "un", "una"]
+
+    while True:
+        texto_original = input("Ingrese el texto a analizar: ")
+
+        if texto_original.lower() == "salir":
+            print("¡Éxito en su escritura!")
+            break
+
+        signos = ".,;:!?"
+        texto_limpio = texto_original.lower()
+        for signo in signos:
+            texto_limpio = texto_limpio.replace(signo, "")
+
+        todas_las_palabras = texto_limpio.split()
+
+        palabras_filtradas = []
+        for p in todas_las_palabras:
+            if p not in ignoradas:
+                palabras_filtradas.append(p)
+
+        frecuencias = {}
+        for palabra in palabras_filtradas:
+            if palabra in frecuencias:
+                frecuencias[palabra] += 1
+            else:
+                frecuencias[palabra] = 1
+
+        palabras_ordenadas = sorted(frecuencias.items(), key=lambda item: item[1], reverse=True)
+        top_5 = palabras_ordenadas[:5]
+
+        print(f"\n--- Resultados del Análisis ---")
+        print(f"Cantidad total (sin ignoradas): {len(palabras_filtradas)}")
+        print(f"Cantidad de palabras únicas: {len(frecuencias)}")
+        print("Top 5 palabras más repetidas:")
+        
+        for palabra, cuenta in top_5:
+            print(f"{palabra} -> {cuenta}")
+        
+        print("-" * 40 + "\n")
+
+if __name__ == "__main__":
+    analizar_quijote()
