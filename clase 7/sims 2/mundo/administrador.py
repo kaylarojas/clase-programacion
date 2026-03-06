@@ -6,7 +6,6 @@ class MundoVirtual:
         self.__mascotas = []
         self.__vehiculos = []
 
-    # Se llama registrar_persona para que coincida con tu main.py
     def registrar_persona(self):
         print("\n--- Nueva Persona ---")
         n = input("Nombre: ")
@@ -14,7 +13,6 @@ class MundoVirtual:
         p = input("Profesión: ")
         nueva_p = Persona(n, e, p)
         
-        # Lógica de Asociación: permite elegir una mascota existente
         if self.__mascotas:
             print("\nMascotas disponibles para asociar:")
             for i, m in enumerate(self.__mascotas):
@@ -41,7 +39,6 @@ class MundoVirtual:
         self.__vehiculos.append(Vehiculo(ma, mo, co))
 
     def imprimir_entidades(self, tipo):
-        # Mapeo de listas según la opción elegida
         mapa = {"1": (self.__personas, "PERSONAS"), 
                 "2": (self.__mascotas, "MASCOTAS"), 
                 "3": (self.__vehiculos, "VEHÍCULOS")}

@@ -8,7 +8,7 @@ class Mascota:
     def __init__(self, nombre, especie, energia):
         self.__nombre = nombre
         self.__especie = especie
-        self.__energia = energia # Atributo recuperado
+        self.__energia = energia 
 
     @property
     def nombre(self): return self.__nombre
@@ -23,7 +23,7 @@ class Persona:
     def __init__(self, nombre, edad, profesion):
         self.__nombre = nombre
         self.__edad = edad
-        self.__profesion = profesion # Atributo recuperado
+        self.__profesion = profesion 
         self.__corazon = Corazon()   # Composición
         self.__mascota = None        # Asociación
 
@@ -48,7 +48,7 @@ class Vehiculo:
     def __init__(self, marca, modelo, color):
         self.__marca = marca
         self.__modelo = modelo
-        self.__color = color # Atributo recuperado
+        self.__color = color 
 
     def __str__(self):
         return f"Vehículo: {self.__marca} {self.__modelo} | Color: {self.__color}"
