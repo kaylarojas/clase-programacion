@@ -1,3 +1,4 @@
+import os 
 from .contacto import Contacto
 from .persistencia import ManejadorArchivo
 
@@ -16,7 +17,6 @@ class GestorAgenda:
         else:
             datos = ManejadorArchivo.cargar_csv(ruta)
         
-        # Convertimos los dicts de los archivos en objetos de clase Contacto
         self.contactos = [Contacto(**d) for d in datos]
         return len(self.contactos)
 
@@ -42,3 +42,28 @@ class GestorAgenda:
     def calcular_promedio_edad(self):
         if not self.contactos: return 0
         return sum(c.edad for c in self.contactos) / len(self.contactos)
+
+#----------------------------------------------------------------------
+    def cargar_datos(self, nombre_archivo, tipo):
+    
+        directorio_base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        
+        self.archivo_actual = os.path.join(directorio_base, nombre_archivo)
+        self.tipo_archivo = tipo
+        
+        if tipo == 'json':
+            datos = ManejadorArchivo.cargar_json(self.archivo_actual)
+        else:
+            datos = ManejadorArchivo.cargar_csv(self.archivo_actual)
+        
+        self.contactos = [Contacto(**d) for d in datos]
+        return len(self.contactos)
+
+    def _actualizar_archivo(self):
+        if not self.archivo_actual: return
+        datos_para_guardar = [c.to_dict() for c in self.contactos]
+        
+        if self.tipo_archivo == 'json':
+            ManejadorArchivo.guardar_json(self.archivo_actual, datos_para_guardar)
+        else:
+            ManejadorArchivo.guardar_csv(self.archivo_actual, datos_para_guardar)

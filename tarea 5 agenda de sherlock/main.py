@@ -3,7 +3,7 @@ from agenda.contacto import Contacto
 
 def mostrar_menu():
     print("\n" + "-"*40)
-    print("    AGENDA DE SHERLOCK HOLMES 🕵️")
+    print("    AGENDA DE SHERLOCK HOLMES ")
     print("-"*40)
     print("1. Cargar agenda desde archivo")
     print("2. Agregar contacto")
