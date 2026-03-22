@@ -1,7 +1,6 @@
 import os
 import procesador_datos
 
-# Esta línea es la "magia" para encontrar la carpeta 'data' correctamente
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def menu():
@@ -14,13 +13,10 @@ def menu():
     
     opcion = input("\nSeleccione una opción: ")
     
-    # Construimos la ruta dinámica uniendo la base del script con la subcarpeta data
     if opcion == "1":
-        # CAMBIA 'datos.csv' por el nombre real de tu archivo de GitHub
         ruta = os.path.join(BASE_DIR, "data", "datos.csv") 
         datos = procesador_datos.leer_csv(ruta)
     elif opcion == "2":
-        # CAMBIA 'datos.json' por el nombre real de tu archivo de GitHub
         ruta = os.path.join(BASE_DIR, "data", "datos.json")
         datos = procesador_datos.leer_json(ruta)
     elif opcion == "3":
@@ -30,7 +26,6 @@ def menu():
         print("Opción inválida.")
         return
 
-    # Verificación de resultados
     if datos is None:
         print(f"\ ERROR: No se encontró el archivo en: {ruta}")
         print("Asegúrate de que el archivo esté dentro de la carpeta 'data'.")

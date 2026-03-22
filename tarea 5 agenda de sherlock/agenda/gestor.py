@@ -44,6 +44,9 @@ class GestorAgenda:
         return sum(c.edad for c in self.contactos) / len(self.contactos)
 
 #----------------------------------------------------------------------
+#Se usa os.path para evitar errores de "Archivo no encontrado" si la terminal 
+#se abre desde una carpeta raíz distinta a la del proyecto (ej. desde GitHub).
+
     def cargar_datos(self, nombre_archivo, tipo):
     
         directorio_base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

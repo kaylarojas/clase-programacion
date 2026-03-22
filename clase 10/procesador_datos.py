@@ -3,7 +3,6 @@ import json
 import os
 
 def leer_csv(ruta):
-    """Lee un archivo CSV y devuelve una lista de diccionarios."""
     datos = []
     if not os.path.exists(ruta):
         return None
@@ -16,7 +15,6 @@ def leer_csv(ruta):
     return datos
 
 def leer_json(ruta):
-    """Lee un archivo JSON y devuelve una lista de diccionarios."""
     if not os.path.exists(ruta):
         return None
         
@@ -24,7 +22,6 @@ def leer_json(ruta):
         return json.load(archivo)
 
 def calcular_estadisticas(lista_personas):
-    """Calcula promedios de edad, salario y peso."""
     if not lista_personas:
         return None
     
@@ -35,7 +32,6 @@ def calcular_estadisticas(lista_personas):
 
     try:
         for p in lista_personas:
-            # Convertimos a float para asegurar que el cálculo matemático funcione
             suma_edad += float(p['edad'])
             suma_salario += float(p['salario'])
             suma_peso += float(p['peso'])
