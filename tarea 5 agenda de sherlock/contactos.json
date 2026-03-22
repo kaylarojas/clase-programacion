@@ -1,0 +1,23 @@
+[
+    {
+        "nombre": "Wiggins",
+        "telefono": "555001",
+        "email": "wiggins@irregulars.com",
+        "edad": 16,
+        "residencia": "Baker Street"
+    },
+    {
+        "nombre": "Irene Adler",
+        "telefono": "555999",
+        "email": "the_woman@bohemia.com",
+        "edad": 30,
+        "residencia": "New Jersey"
+    },
+    {
+        "nombre": "Shinwell Johnson",
+        "telefono": "555005",
+        "email": "shinwell@informer.co.uk",
+        "edad": 45,
+        "residencia": "East End"
+    }
+]
