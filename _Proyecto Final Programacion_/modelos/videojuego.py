@@ -46,7 +46,6 @@ class VideoJuego:
     def consola(self):
         return self._consola
 
-    # IMPORTANTE: Este método DEBE estar indentado dentro de la clase VideoJuego
     def obtener_detalles(self):
         """Devuelve la información completa del juego para el catálogo."""
         detalles = "ID: " + str(self._identificador)
