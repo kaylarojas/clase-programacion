@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "proyecto": "Analisis de Ventas",
+        "lenguaje": "Python",
+        "estado": "Completado"
+    },
+    {
+        "id": "2",
+        "proyecto": "Red Neuronal MNIST",
+        "lenguaje": "Python",
+        "estado": "En progreso"
+    },
+    {
+        "id": "3",
+        "proyecto": "Clasificacion de Leads",
+        "lenguaje": "SQL",
+        "estado": "Pendiente"
+    }
+]
