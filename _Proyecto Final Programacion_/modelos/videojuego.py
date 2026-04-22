@@ -57,28 +57,39 @@ class VideoJuego:
         return detalles
 
 
-    # --- Clases Hijas (Herencia) ---
+def obtener_detalles(self):
+        """Devuelve la información completa del juego para el catálogo."""
+        detalles = "ID: " + str(self._identificador)
+        detalles = detalles + " | " + self._nombre
+        detalles = detalles + " [" + self._consola + "]"
+        detalles = detalles + " | Cat: " + self._categoria
+        detalles = detalles + " | Clasif: " + self._esrb
+        detalles = detalles + " | Precio: $" + str(self._precio)
+        return detalles
 
-    class JuegoPS5(VideoJuego):
-        def __init__(self, id, nom, cat, pre, esrb, st):
-            super().__init__(id, nom, cat, pre, esrb, st, "PS5")
 
-        def obtener_detalles(self):
-            base = super().obtener_detalles()
-            return base + " | Plataforma: PlayStation 5"
+# --- Clases Hijas (Herencia) ---        
 
-    class JuegoXbox(VideoJuego):
-        def __init__(self, id, nom, cat, pre, esrb, st):
-            super().__init__(id, nom, cat, pre, esrb, st, "Xbox")
+class JuegoPS5(VideoJuego):              
+    def __init__(self, id, nom, cat, pre, esrb, st):
+        super().__init__(id, nom, cat, pre, esrb, st, "PS5")
 
-        def obtener_detalles(self):
-            base = super().obtener_detalles()
-            return base + " | Plataforma: Xbox Series X"
+    def obtener_detalles(self):
+        base = super().obtener_detalles()
+        return base + " | Plataforma: PlayStation 5"
 
-    class JuegoNintendo(VideoJuego):
-        def __init__(self, id, nom, cat, pre, esrb, st):
-            super().__init__(id, nom, cat, pre, esrb, st, "Nintendo Switch")
+class JuegoXbox(VideoJuego):             
+    def __init__(self, id, nom, cat, pre, esrb, st):
+        super().__init__(id, nom, cat, pre, esrb, st, "Xbox")
 
-        def obtener_detalles(self):
-            base = super().obtener_detalles()
-            return base + " | Plataforma: Nintendo Switch"
+    def obtener_detalles(self):
+        base = super().obtener_detalles()
+        return base + " | Plataforma: Xbox Series X"
+
+class JuegoNintendo(VideoJuego):         
+    def __init__(self, id, nom, cat, pre, esrb, st):
+        super().__init__(id, nom, cat, pre, esrb, st, "Nintendo Switch")
+
+    def obtener_detalles(self):
+        base = super().obtener_detalles()
+        return base + " | Plataforma: Nintendo Switch"
