@@ -23,7 +23,7 @@
         "categoria": "Carreras",
         "precio": 59.99,
         "esrb": "E",
-        "stock": 15,
+        "stock": 14,
         "consola": "Nintendo Switch"
     },
     {
@@ -269,5 +269,4 @@
         "stock": 5,
         "consola": "Nintendo Switch"
     }
-
 ]

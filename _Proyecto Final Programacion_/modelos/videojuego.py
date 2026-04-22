@@ -12,7 +12,7 @@ class VideoJuego:
         self._stock = stock
         self._consola = consola
 
-    # --- Propiedades (Getters y Setters) ---
+    # Propiedades 
     @property
     def identificador(self):
         return self._identificador
@@ -37,7 +37,7 @@ class VideoJuego:
     def stock(self):
         return self._stock
 
-    @stock.setter
+    @stock.setter 
     def stock(self, nueva_cantidad):
         if nueva_cantidad >= 0:
             self._stock = nueva_cantidad
@@ -47,17 +47,6 @@ class VideoJuego:
         return self._consola
 
     def obtener_detalles(self):
-        """Devuelve la información completa del juego para el catálogo."""
-        detalles = "ID: " + str(self._identificador)
-        detalles = detalles + " | " + self._nombre
-        detalles = detalles + " [" + self._consola + "]"
-        detalles = detalles + " | Cat: " + self._categoria
-        detalles = detalles + " | Clasif: " + self._esrb
-        detalles = detalles + " | Precio: $" + str(self._precio)
-        return detalles
-
-
-def obtener_detalles(self):
         """Devuelve la información completa del juego para el catálogo."""
         detalles = "ID: " + str(self._identificador)
         detalles = detalles + " | " + self._nombre

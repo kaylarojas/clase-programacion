@@ -17,9 +17,7 @@ class Carrito:
             print("Sin stock disponible.")
 
     def eliminar_videojuego(self, indice):
-        """
-        Elimina un juego del carrito según su índice. Este es el método que causaba el error.
-        """
+       
         try:
             # Quita el objeto de la lista
             juego_removido = self._items.pop(indice)
@@ -63,6 +61,6 @@ class Carrito:
             "total": round(self._total, 2)
         }
 
-    @property
+    @property # Permite leer el total acumulado del carrito desde afuera como si fuera un atributo normal (carrito.total), pero sin permitir modificarlo directamente.
     def total(self):
         return self._total
