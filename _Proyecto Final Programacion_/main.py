@@ -1,4 +1,3 @@
-
 import os
 from modelos.videojuego import JuegoPS5, JuegoXbox, JuegoNintendo
 from modelos.carrito import Carrito
@@ -22,21 +21,21 @@ def crear_objeto_juego(datos_diccionario):
     elif consola == "Xbox":
         return JuegoXbox(identificador, nombre, categoria, precio, esrb, stock)
     else:
-        # Por defecto tratamos como Nintendo Switch si no es las anteriores
         return JuegoNintendo(identificador, nombre, categoria, precio, esrb, stock)
 
 def main():
     # --- CONFIGURACIÓN DE RUTAS DINÁMICAS ---
-    # Obtenemos la ruta absoluta de la carpeta donde reside este main.py
     ruta_base = os.path.dirname(os.path.abspath(__file__))
-    
-    # Construimos las rutas hacia los archivos que te dio el profesor
     ruta_archivo_json = os.path.join(ruta_base, "catalogo.json")
     ruta_archivo_csv = os.path.join(ruta_base, "catalogo.csv")
 
     catalogo_objetos = []
     carrito_compras = Carrito()
     
+    # --- VARIABLES DE PERSISTENCIA ---
+    ruta_activa = ""
+    formato_activo = ""
+
     print("--- SISTEMA DE GESTIÓN: TIENDA DE VIDEOJUEGOS ---")
     print("Seleccione el archivo de origen para cargar el catálogo:")
     print("1. Cargar desde 'catalogo.json'")
@@ -44,19 +43,20 @@ def main():
     print("3. Iniciar catálogo vacío")
     
     seleccion_inicial = input("Opción: ")
+    formato_activo = seleccion_inicial
     
     datos_leidos = []
     if seleccion_inicial == "1":
-        datos_leidos = repo.cargar_desde_json(ruta_archivo_json)
+        ruta_activa = ruta_archivo_json
+        datos_leidos = repo.cargar_desde_json(ruta_activa)
     elif seleccion_inicial == "2":
-        datos_leidos = repo.cargar_desde_csv(ruta_archivo_csv)
+        ruta_activa = ruta_archivo_csv
+        datos_leidos = repo.cargar_desde_csv(ruta_activa)
     
-    # Convertimos los datos planos a objetos de nuestras clases
     for item in datos_leidos:
         nuevo_juego = crear_objeto_juego(item)
         catalogo_objetos.append(nuevo_juego)
 
-    # --- MENÚ PRINCIPAL DEL SISTEMA ---
     sistema_activo = True
     while sistema_activo:
         print("\n================ MENU PRINCIPAL ================")
@@ -79,42 +79,21 @@ def main():
         elif opcion == "2":
             try:
                 print("\n--- FORMULARIO DE NUEVO INGRESO ---")
-                id_nuevo = int(input("Ingrese ID (número único): "))
+                id_nuevo = int(input("Ingrese ID: "))
                 
-                # Validación de Identificador repetido
-                id_existe = False
-                for j in catalogo_objetos:
-                    if j.identificador == id_nuevo:
-                        id_existe = True
-                
+                id_existe = any(j.identificador == id_nuevo for j in catalogo_objetos)
                 if id_existe:
-                    print("Error: El ID " + str(id_nuevo) + " ya está registrado.")
+                    print(f"Error: El ID {id_nuevo} ya existe.")
                     continue
 
-                nombre_j = input("Nombre del Videojuego: ")
-                if nombre_j == "":
-                    print("Error: El nombre no puede estar vacío.")
-                    continue
+                nombre_j = input("Nombre: ")
+                cat_j = input("Categoría: ")
+                esrb_j = input("Clasificación: ")
+                precio_j = float(input("Precio: "))
+                stock_j = int(input("Stock: "))
 
-                cat_j = input("Categoría (Aventura, Acción, etc.): ")
-                esrb_j = input("Clasificación ESRB (E, T, M): ")
-                
-                # 2. Validación de Precio (Inmediata)
-                precio_j = float(input("Precio de venta: "))
-                if precio_j < 0:
-                    print("Error: No se permiten precios negativos.")
-                    continue # Regresa al menú sin pedir el stock
-
-                # 3. Validación de Stock (Inmediata)
-                stock_j = int(input("Cantidad en stock: "))
-                if stock_j < 0:
-                    print("Error: El stock no puede ser negativo.")
-                    continue
-
-                print("Seleccione la Consola:")
-                print("1. PlayStation 5 | 2. Xbox Series | 3. Nintendo Switch")
+                print("Consola: 1. PS5 | 2. Xbox | 3. Nintendo")
                 op_c = input("Opción: ")
-                
                 nom_consola = "PS5" if op_c == "1" else "Xbox" if op_c == "2" else "Nintendo Switch"
                 
                 diccionario_nuevo = {
@@ -124,22 +103,27 @@ def main():
                 
                 objeto_nuevo = crear_objeto_juego(diccionario_nuevo)
                 catalogo_objetos.append(objeto_nuevo)
-                print("¡Producto guardado exitosamente en el catálogo!")
+                
+                # PERSISTENCIA AUTOMÁTICA
+                if ruta_activa:
+                    repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_activo)
+                
+                print("¡Producto registrado y guardado permanentemente!")
             except ValueError:
-                print("Error: Por favor ingrese datos numéricos donde se solicita.")
+                print("Error: Ingrese valores numéricos válidos.")
 
         elif opcion == "3":
             try:
-                id_a_comprar = int(input("Ingrese el ID del juego para el carrito: "))
-                encontrado = None
-                for j in catalogo_objetos:
-                    if j.identificador == id_a_comprar:
-                        encontrado = j
+                id_a_comprar = int(input("Ingrese ID para el carrito: "))
+                encontrado = next((j for j in catalogo_objetos if j.identificador == id_a_comprar), None)
                 
                 if encontrado:
                     carrito_compras.agregar(encontrado)
+                    # PERSISTENCIA AUTOMÁTICA (Actualiza el stock en el archivo)
+                    if ruta_activa:
+                        repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_activo)
                 else:
-                    print("Error: El ID ingresado no existe en el catálogo.")
+                    print("Error: ID no encontrado.")
             except ValueError:
                 print("Error: ID inválido.")
 
@@ -151,31 +135,33 @@ def main():
             carrito_compras.mostrar()
             if carrito_compras.total > 0:
                 try:
-                    indice_eliminar = int(input("Número de índice para eliminar: "))
+                    indice_eliminar = int(input("Índice para eliminar: "))
                     carrito_compras.eliminar_videojuego(indice_eliminar)
+                    # PERSISTENCIA AUTOMÁTICA (Devuelve stock al archivo)
+                    if ruta_activa:
+                        repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_activo)
                 except ValueError:
                     print("Error: Entrada no válida.")
 
         elif opcion == "6":
             if carrito_compras.total == 0:
-                print("Acción cancelada: El carrito no tiene productos.")
+                print("El carrito está vacío.")
                 continue
             
-            print("\n--- PROCESO DE FACTURACIÓN ---")
             nombre_cliente = input("Nombre del Cliente: ")
-            nombre_factura = input("Nombre deseado para el archivo: ")
-            print("Formato de salida: 1. JSON | 2. CSV")
-            formato_op = input("Seleccione: ")
+            nombre_factura = input("Nombre del archivo de factura: ")
+            print("Formato: 1. JSON | 2. CSV")
+            f_op = input("Opción: ")
             
-            tipo_archivo = "json" if formato_op == "1" else "csv"
-            datos_finales = carrito_compras.exportar_datos(nombre_cliente)
+            tipo = "json" if f_op == "1" else "csv"
+            datos_f = carrito_compras.exportar_datos(nombre_cliente)
+            repo.guardar_factura_generica(nombre_factura, datos_f, tipo)
             
-            repo.guardar_factura_generica(nombre_factura, datos_finales, tipo_archivo)
-            print("Venta finalizada. Saliendo del sistema...")
+            print("Venta finalizada con éxito.")
             sistema_activo = False 
 
         elif opcion == "7":
-            print("Cerrando sistema. ¡Tenga un excelente día!")
+            print("Saliendo del sistema...")
             sistema_activo = False
 
 if __name__ == "__main__":

@@ -18,7 +18,6 @@ def cargar_desde_csv(ruta):
         archivo = open(ruta, "r", encoding="utf-8")
         lector = csv.DictReader(archivo)
         for fila in lector:
-            # Convertimos tipos de datos del CSV (que siempre son texto)
             fila["id"] = int(fila["id"])
             fila["precio"] = float(fila["precio"])
             fila["stock"] = int(fila["stock"])
@@ -47,3 +46,37 @@ def guardar_factura_generica(nombre, datos, formato):
         print("Factura generada con éxito.")
     except Exception as e:
         print("Error al guardar: " + str(e))
+
+# ESTA ES LA FUNCIÓN QUE TE FALTA SEGÚN EL ERROR:
+def guardar_catalogo_completo(ruta, lista_objetos, formato):
+    """
+    Sobreescribe el archivo original (JSON o CSV) 
+    con el estado actual de los objetos en memoria.
+    """
+    try:
+        datos_planos = []
+        for j in lista_objetos:
+            datos_planos.append({
+                "id": j.identificador,
+                "nombre": j.nombre,
+                "categoria": j.categoria,
+                "precio": j.precio,
+                "esrb": j.esrb,
+                "stock": j.stock,
+                "consola": j.consola
+            })
+
+        if formato == "1": # JSON
+            with open(ruta, "w", encoding="utf-8") as f:
+                json.dump(datos_planos, f, indent=4)
+        
+        elif formato == "2": # CSV
+            with open(ruta, "w", newline="", encoding="utf-8") as f:
+                columnas = ["id", "nombre", "categoria", "precio", "esrb", "stock", "consola"]
+                escritor = csv.DictWriter(f, fieldnames=columnas)
+                escritor.writeheader()
+                escritor.writerows(datos_planos)
+            
+        print("--> Sincronización con archivo exitosa.")
+    except Exception as e:
+        print("Error al sincronizar con el archivo: " + str(e))

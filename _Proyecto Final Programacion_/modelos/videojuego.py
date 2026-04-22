@@ -53,7 +53,7 @@ class VideoJuego:
         detalles = detalles + " [" + self._consola + "]"
         detalles = detalles + " | Cat: " + self._categoria
         detalles = detalles + " | Clasif: " + self._esrb
-        detalles = detalles + " - Precio: $" + str(self._precio)
+        detalles = detalles + " | Precio: $" + str(self._precio)
         return detalles
 
 
