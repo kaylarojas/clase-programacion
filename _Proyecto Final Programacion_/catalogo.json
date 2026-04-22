@@ -277,5 +277,32 @@
         "esrb": "m",
         "stock": 8,
         "consola": "PS5"
+    },
+    {
+        "id": 32,
+        "nombre": "prueba",
+        "categoria": "aventura",
+        "precio": 0.0,
+        "esrb": "M",
+        "stock": 0,
+        "consola": "PS5"
+    },
+    {
+        "id": 33,
+        "nombre": "prueba",
+        "categoria": "aventura",
+        "precio": 0.0,
+        "esrb": "M",
+        "stock": 0,
+        "consola": "PS5"
+    },
+    {
+        "id": 34,
+        "nombre": "PRUEBA",
+        "categoria": "AVENTURA",
+        "precio": 0.0,
+        "esrb": "M",
+        "stock": 0,
+        "consola": "Nintendo Switch"
     }
 ]
