@@ -18,15 +18,14 @@ class Carrito:
 
     def eliminar_videojuego(self, indice):
         """
-        Elimina un juego del carrito según su índice.
-        Este es el método que causaba el error.
+        Elimina un juego del carrito según su índice. Este es el método que causaba el error.
         """
         try:
-            # Quitamos el objeto de la lista
+            # Quita el objeto de la lista
             juego_removido = self._items.pop(indice)
-            # Devolvemos el stock al catálogo
+            # Devolve el stock al catálogo
             juego_removido.stock = juego_removido.stock + 1
-            # Restamos del total
+            # Resta del total
             self._total = self._total - juego_removido.precio
             print("Se eliminó '" + juego_removido.nombre + "' del carrito.")
         except IndexError:
@@ -43,10 +42,19 @@ class Carrito:
             print("Total actual: $" + str(round(self._total, 2)))
 
     def exportar_datos(self, cliente):
-        """Prepara los datos para la factura final."""
-        lista_juegos = []
+        # Agrupamos por nombre para calcular cantidad
+        agrupado = {}
         for j in self._items:
-            lista_juegos.append({"nombre": j.nombre, "precio": j.precio})
+            if j.nombre in agrupado:
+                agrupado[j.nombre]["cantidad"] += 1
+            else:
+                agrupado[j.nombre] = {
+                    "nombre": j.nombre,
+                    "precio_unitario": j.precio,
+                    "cantidad": 1
+                }
+        
+        lista_juegos = list(agrupado.values())
         
         return {
             "cliente": cliente,

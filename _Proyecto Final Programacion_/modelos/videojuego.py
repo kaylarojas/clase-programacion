@@ -57,17 +57,28 @@ class VideoJuego:
         return detalles
 
 
-# --- Clases Hijas (Herencia) ---
+    # --- Clases Hijas (Herencia) ---
 
-class JuegoPS5(VideoJuego):
-    def __init__(self, id, nom, cat, pre, esrb, st):
-        # Llama al constructor del padre y pasa "PS5" como consola fija
-        super().__init__(id, nom, cat, pre, esrb, st, "PS5")
+    class JuegoPS5(VideoJuego):
+        def __init__(self, id, nom, cat, pre, esrb, st):
+            super().__init__(id, nom, cat, pre, esrb, st, "PS5")
 
-class JuegoXbox(VideoJuego):
-    def __init__(self, id, nom, cat, pre, esrb, st):
-        super().__init__(id, nom, cat, pre, esrb, st, "Xbox")
+        def obtener_detalles(self):
+            base = super().obtener_detalles()
+            return base + " | Plataforma: PlayStation 5"
 
-class JuegoNintendo(VideoJuego):
-    def __init__(self, id, nom, cat, pre, esrb, st):
-        super().__init__(id, nom, cat, pre, esrb, st, "Nintendo Switch")
+    class JuegoXbox(VideoJuego):
+        def __init__(self, id, nom, cat, pre, esrb, st):
+            super().__init__(id, nom, cat, pre, esrb, st, "Xbox")
+
+        def obtener_detalles(self):
+            base = super().obtener_detalles()
+            return base + " | Plataforma: Xbox Series X"
+
+    class JuegoNintendo(VideoJuego):
+        def __init__(self, id, nom, cat, pre, esrb, st):
+            super().__init__(id, nom, cat, pre, esrb, st, "Nintendo Switch")
+
+        def obtener_detalles(self):
+            base = super().obtener_detalles()
+            return base + " | Plataforma: Nintendo Switch"

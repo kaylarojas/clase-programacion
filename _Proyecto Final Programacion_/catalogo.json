@@ -268,41 +268,6 @@
         "esrb": "M",
         "stock": 5,
         "consola": "Nintendo Switch"
-    },
-    {
-        "id": 31,
-        "nombre": "kaay",
-        "categoria": "aventur",
-        "precio": 30.0,
-        "esrb": "m",
-        "stock": 8,
-        "consola": "PS5"
-    },
-    {
-        "id": 32,
-        "nombre": "prueba",
-        "categoria": "aventura",
-        "precio": 0.0,
-        "esrb": "M",
-        "stock": 0,
-        "consola": "PS5"
-    },
-    {
-        "id": 33,
-        "nombre": "prueba",
-        "categoria": "aventura",
-        "precio": 0.0,
-        "esrb": "M",
-        "stock": 0,
-        "consola": "PS5"
-    },
-    {
-        "id": 34,
-        "nombre": "PRUEBA",
-        "categoria": "AVENTURA",
-        "precio": 0.0,
-        "esrb": "M",
-        "stock": 0,
-        "consola": "Nintendo Switch"
     }
+
 ]

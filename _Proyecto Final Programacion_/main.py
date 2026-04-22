@@ -59,12 +59,11 @@ def main():
         ruta_activa = archivo_csv
         datos_crudos = repo.cargar_desde_csv(ruta_activa)
     
-    # Convertimos los diccionarios leídos en objetos reales
+    # Convertir los diccionarios leídos en objetos reales
     for item in datos_crudos:
         nuevo_juego = crear_objeto_juego(item)
         catalogo_objetos.append(nuevo_juego)
 
-    # --- CICLO PRINCIPAL DEL MENÚ ---
     sistema_encendido = True
     while sistema_encendido:
         print("\n" + "="*30)
@@ -94,7 +93,6 @@ def main():
                 print("\n--- INGRESO DE NUEVO PRODUCTO ---")
                 id_nuevo = int(input("ID único: "))
                 
-                # Revisamos que el ID no exista usando un ciclo simple
                 existe = False
                 for j in catalogo_objetos:
                     if j.identificador == id_nuevo:
@@ -104,12 +102,28 @@ def main():
                     print("Error: Ese ID ya pertenece a otro juego.")
                     continue
 
-                # Pedimos el resto de datos
                 nombre = input("Nombre del juego: ")
                 categoria = input("Género/Categoría: ")
                 esrb = input("Clasificación (E, T, M): ")
                 precio = float(input("Precio: "))
                 stock = int(input("Cantidad inicial: "))
+
+                if nombre.strip() == "":
+                    print("Error: El nombre no puede estar vacío.")
+                    continue
+                if categoria.strip() == "":
+                    print("Error: La categoría no puede estar vacía.")
+                    continue
+                if esrb.strip() == "":
+                    print("Error: La clasificación no puede estar vacía.")
+                    continue
+                if precio <= 0:
+                    print("Error: El precio no puede ser negativo.")
+                    continue
+                if stock <= 0:
+                    print("Error: El stock no puede ser negativo.")
+                    continue
+                # --- FIN VALIDACIONES ---
 
                 print("Consola: 1. PS5 | 2. Xbox | 3. Nintendo")
                 cons_op = input("Opción: ")
@@ -124,7 +138,7 @@ def main():
                 objeto_nuevo = crear_objeto_juego(dicc_datos)
                 catalogo_objetos.append(objeto_nuevo)
                 
-                # Guardamos en el archivo automáticamente
+                # Guarda en el archivo automáticamente
                 if ruta_activa != "":
                     repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_elegido)
                 
@@ -138,7 +152,7 @@ def main():
             try:
                 id_buscado = int(input("ID del juego que desea comprar: "))
                 
-                # Buscamos el objeto en nuestra lista
+                # Busca el objeto en lista
                 juego_encontrado = None
                 for j in catalogo_objetos:
                     if j.identificador == id_buscado:
@@ -148,7 +162,7 @@ def main():
                     # El carrito se encarga de bajar el stock
                     carrito_compras.agregar(juego_encontrado)
                     
-                    # Guardamos el cambio de stock en el archivo
+                    # Guarda el cambio de stock en el archivo
                     if ruta_activa != "":
                         repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_elegido)
                 else:
@@ -169,7 +183,7 @@ def main():
                     indice = int(input("Número de línea que desea quitar: "))
                     carrito_compras.eliminar_videojuego(indice)
                     
-                    # Al devolverlo, el stock sube, guardamos ese cambio
+                    # Al devolver, el stock sube, guardamos ese cambio
                     if ruta_activa != "":
                         repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_elegido)
                 except ValueError:
@@ -188,7 +202,7 @@ def main():
             f_op = input("Opción: ")
             formato_factura = "json" if f_op == "1" else "csv"
             
-            # Sacamos los datos del carrito para el reporte
+            # Saca los datos del carrito para el reporte
             datos_factura = carrito_compras.exportar_datos(cliente)
             repo.guardar_factura_generica(nombre_archivo, datos_factura, formato_factura)
             

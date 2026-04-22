@@ -47,7 +47,7 @@ def guardar_factura_generica(nombre, datos, formato):
     except Exception as e:
         print("Error al guardar: " + str(e))
 
-# ESTA ES LA FUNCIÓN QUE TE FALTA SEGÚN EL ERROR:
+
 def guardar_catalogo_completo(ruta, lista_objetos, formato):
     """
     Sobreescribe el archivo original (JSON o CSV) 
