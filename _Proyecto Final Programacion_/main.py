@@ -3,166 +3,202 @@ from modelos.videojuego import JuegoPS5, JuegoXbox, JuegoNintendo
 from modelos.carrito import Carrito
 import servicios.archivos as repo
 
-def crear_objeto_juego(datos_diccionario):
+def crear_objeto_juego(datos):
     """
-    Función auxiliar para transformar diccionarios en objetos de clase.
-    Cumple con: Polimorfismo y Herencia.
+    Transforma un diccionario de datos en un objeto de clase específico.
+    Esto permite usar Polimorfismo más adelante.
     """
-    consola = datos_diccionario["consola"]
-    identificador = datos_diccionario["id"]
-    nombre = datos_diccionario["nombre"]
-    categoria = datos_diccionario.get("categoria", "General")
-    precio = datos_diccionario["precio"]
-    esrb = datos_diccionario.get("esrb", "E")
-    stock = datos_diccionario["stock"]
+    # Extraemos los datos del diccionario
+    consola = datos.get("consola")
+    id_j = datos.get("id")
+    nom = datos.get("nombre")
+    cat = datos.get("categoria", "General")
+    pre = datos.get("precio")
+    esrb = datos.get("esrb", "E")
+    stk = datos.get("stock")
 
+    # Creamos el objeto según la consola correspondiente
     if consola == "PS5":
-        return JuegoPS5(identificador, nombre, categoria, precio, esrb, stock)
+        return JuegoPS5(id_j, nom, cat, pre, esrb, stk)
     elif consola == "Xbox":
-        return JuegoXbox(identificador, nombre, categoria, precio, esrb, stock)
+        return JuegoXbox(id_j, nom, cat, pre, esrb, stk)
     else:
-        return JuegoNintendo(identificador, nombre, categoria, precio, esrb, stock)
+        # Por defecto, si no es PS5 o Xbox, es para Nintendo
+        return JuegoNintendo(id_j, nom, cat, pre, esrb, stk)
 
 def main():
-    # --- CONFIGURACIÓN DE RUTAS DINÁMICAS ---
+    # --- CONFIGURACIÓN DE RUTAS ---
+    # Buscamos la carpeta donde está este archivo para no tener problemas de rutas
     ruta_base = os.path.dirname(os.path.abspath(__file__))
-    ruta_archivo_json = os.path.join(ruta_base, "catalogo.json")
-    ruta_archivo_csv = os.path.join(ruta_base, "catalogo.csv")
+    archivo_json = os.path.join(ruta_base, "catalogo.json")
+    archivo_csv = os.path.join(ruta_base, "catalogo.csv")
 
+    # Listas donde guardaremos la información mientras el programa corre
     catalogo_objetos = []
     carrito_compras = Carrito()
     
-    # --- VARIABLES DE PERSISTENCIA ---
+    # Variables para recordar qué archivo estamos usando
     ruta_activa = ""
-    formato_activo = ""
+    formato_elegido = ""
 
-    print("--- SISTEMA DE GESTIÓN: TIENDA DE VIDEOJUEGOS ---")
-    print("Seleccione el archivo de origen para cargar el catálogo:")
-    print("1. Cargar desde 'catalogo.json'")
-    print("2. Cargar desde 'catalogo.csv'")
-    print("3. Iniciar catálogo vacío")
+    print("--- BIENVENIDO A LA GESTIÓN DE LA TIENDA ---")
+    print("¿Desde dónde desea cargar los datos hoy?")
+    print("1. Archivo JSON")
+    print("2. Archivo CSV")
+    print("3. Catálogo nuevo (vacío)")
     
-    seleccion_inicial = input("Opción: ")
-    formato_activo = seleccion_inicial
+    seleccion = input("Seleccione una opción: ")
+    formato_elegido = seleccion
     
-    datos_leidos = []
-    if seleccion_inicial == "1":
-        ruta_activa = ruta_archivo_json
-        datos_leidos = repo.cargar_desde_json(ruta_activa)
-    elif seleccion_inicial == "2":
-        ruta_activa = ruta_archivo_csv
-        datos_leidos = repo.cargar_desde_csv(ruta_activa)
+    # --- CARGA DE DATOS INICIAL ---
+    datos_crudos = []
+    if seleccion == "1":
+        ruta_activa = archivo_json
+        datos_crudos = repo.cargar_desde_json(ruta_activa)
+    elif seleccion == "2":
+        ruta_activa = archivo_csv
+        datos_crudos = repo.cargar_desde_csv(ruta_activa)
     
-    for item in datos_leidos:
+    # Convertimos los diccionarios leídos en objetos reales
+    for item in datos_crudos:
         nuevo_juego = crear_objeto_juego(item)
         catalogo_objetos.append(nuevo_juego)
 
-    sistema_activo = True
-    while sistema_activo:
-        print("\n================ MENU PRINCIPAL ================")
-        print("1. Ver Catálogo Completo")
-        print("2. Registrar Nuevo Videojuego")
-        print("3. Añadir Producto al Carrito")
-        print("4. Revisar Carrito de Compras")
-        print("5. Eliminar Producto del Carrito")
-        print("6. Finalizar Venta y Generar Factura")
-        print("7. Salir")
-        print("================================================")
+    # --- CICLO PRINCIPAL DEL MENÚ ---
+    sistema_encendido = True
+    while sistema_encendido:
+        print("\n" + "="*30)
+        print("       MENÚ DE TIENDA")
+        print("="*30)
+        print("1. Ver Inventario")
+        print("2. Registrar Juego Nuevo")
+        print("3. Agregar al Carrito")
+        print("4. Ver Carrito Actual")
+        print("5. Quitar del Carrito")
+        print("6. Pagar y Salir")
+        print("7. Solo Salir")
         
-        opcion = input("Seleccione una acción (1-7): ")
+        opcion = input("¿Qué desea hacer?: ")
 
+        # 1. MOSTRAR CATÁLOGO
         if opcion == "1":
-            print("\n--- LISTADO DE PRODUCTOS EN STOCK ---")
+            print("\n--- LISTA DE PRODUCTOS DISPONIBLES ---")
             for juego in catalogo_objetos:
-                print(juego.obtener_detalles() + " | Stock: " + str(juego.stock))
+                # El método obtener_detalles() viene de la clase VideoJuego
+                info = juego.obtener_detalles()
+                print(f"{info} | En Stock: {juego.stock}")
 
+        # 2. REGISTRAR JUEGO NUEVO
         elif opcion == "2":
             try:
-                print("\n--- FORMULARIO DE NUEVO INGRESO ---")
-                id_nuevo = int(input("Ingrese ID: "))
+                print("\n--- INGRESO DE NUEVO PRODUCTO ---")
+                id_nuevo = int(input("ID único: "))
                 
-                id_existe = any(j.identificador == id_nuevo for j in catalogo_objetos)
-                if id_existe:
-                    print(f"Error: El ID {id_nuevo} ya existe.")
+                # Revisamos que el ID no exista usando un ciclo simple
+                existe = False
+                for j in catalogo_objetos:
+                    if j.identificador == id_nuevo:
+                        existe = True
+                
+                if existe:
+                    print("Error: Ese ID ya pertenece a otro juego.")
                     continue
 
-                nombre_j = input("Nombre: ")
-                cat_j = input("Categoría: ")
-                esrb_j = input("Clasificación: ")
-                precio_j = float(input("Precio: "))
-                stock_j = int(input("Stock: "))
+                # Pedimos el resto de datos
+                nombre = input("Nombre del juego: ")
+                categoria = input("Género/Categoría: ")
+                esrb = input("Clasificación (E, T, M): ")
+                precio = float(input("Precio: "))
+                stock = int(input("Cantidad inicial: "))
 
                 print("Consola: 1. PS5 | 2. Xbox | 3. Nintendo")
-                op_c = input("Opción: ")
-                nom_consola = "PS5" if op_c == "1" else "Xbox" if op_c == "2" else "Nintendo Switch"
+                cons_op = input("Opción: ")
+                consola_nom = "PS5" if cons_op == "1" else "Xbox" if cons_op == "2" else "Nintendo Switch"
                 
-                diccionario_nuevo = {
-                    "id": id_nuevo, "nombre": nombre_j, "categoria": cat_j,
-                    "precio": precio_j, "esrb": esrb_j, "stock": stock_j, "consola": nom_consola
+                # Creamos el diccionario y luego el objeto
+                dicc_datos = {
+                    "id": id_nuevo, "nombre": nombre, "categoria": categoria,
+                    "precio": precio, "esrb": esrb, "stock": stock, "consola": consola_nom
                 }
                 
-                objeto_nuevo = crear_objeto_juego(diccionario_nuevo)
+                objeto_nuevo = crear_objeto_juego(dicc_datos)
                 catalogo_objetos.append(objeto_nuevo)
                 
-                # PERSISTENCIA AUTOMÁTICA
-                if ruta_activa:
-                    repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_activo)
+                # Guardamos en el archivo automáticamente
+                if ruta_activa != "":
+                    repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_elegido)
                 
-                print("¡Producto registrado y guardado permanentemente!")
-            except ValueError:
-                print("Error: Ingrese valores numéricos válidos.")
+                print("¡Juego guardado exitosamente!")
 
+            except ValueError:
+                print("Error: Asegúrese de poner números en ID, Precio y Stock.")
+
+        # 3. AGREGAR AL CARRITO
         elif opcion == "3":
             try:
-                id_a_comprar = int(input("Ingrese ID para el carrito: "))
-                encontrado = next((j for j in catalogo_objetos if j.identificador == id_a_comprar), None)
+                id_buscado = int(input("ID del juego que desea comprar: "))
                 
-                if encontrado:
-                    carrito_compras.agregar(encontrado)
-                    # PERSISTENCIA AUTOMÁTICA (Actualiza el stock en el archivo)
-                    if ruta_activa:
-                        repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_activo)
+                # Buscamos el objeto en nuestra lista
+                juego_encontrado = None
+                for j in catalogo_objetos:
+                    if j.identificador == id_buscado:
+                        juego_encontrado = j
+                
+                if juego_encontrado:
+                    # El carrito se encarga de bajar el stock
+                    carrito_compras.agregar(juego_encontrado)
+                    
+                    # Guardamos el cambio de stock en el archivo
+                    if ruta_activa != "":
+                        repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_elegido)
                 else:
-                    print("Error: ID no encontrado.")
+                    print("No se encontró ningún juego con ese ID.")
             except ValueError:
-                print("Error: ID inválido.")
+                print("Error: ID no válido.")
 
+        # 4. VER CARRITO
         elif opcion == "4":
-            print("\n--- ESTADO DEL CARRITO ---")
+            print("\n--- TU CARRITO ACTUAL ---")
             carrito_compras.mostrar()
 
+        # 5. QUITAR DEL CARRITO
         elif opcion == "5":
             carrito_compras.mostrar()
             if carrito_compras.total > 0:
                 try:
-                    indice_eliminar = int(input("Índice para eliminar: "))
-                    carrito_compras.eliminar_videojuego(indice_eliminar)
-                    # PERSISTENCIA AUTOMÁTICA (Devuelve stock al archivo)
-                    if ruta_activa:
-                        repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_activo)
+                    indice = int(input("Número de línea que desea quitar: "))
+                    carrito_compras.eliminar_videojuego(indice)
+                    
+                    # Al devolverlo, el stock sube, guardamos ese cambio
+                    if ruta_activa != "":
+                        repo.guardar_catalogo_completo(ruta_activa, catalogo_objetos, formato_elegido)
                 except ValueError:
-                    print("Error: Entrada no válida.")
+                    print("Error: Entrada incorrecta.")
 
+        # 6. FINALIZAR VENTA (FACTURA)
         elif opcion == "6":
             if carrito_compras.total == 0:
-                print("El carrito está vacío.")
+                print("No puedes pagar un carrito vacío.")
                 continue
             
-            nombre_cliente = input("Nombre del Cliente: ")
-            nombre_factura = input("Nombre del archivo de factura: ")
-            print("Formato: 1. JSON | 2. CSV")
+            cliente = input("Nombre del cliente: ")
+            nombre_archivo = input("¿Cómo quiere llamar al archivo de factura?: ")
+            
+            print("Formato de factura: 1. JSON | 2. CSV")
             f_op = input("Opción: ")
+            formato_factura = "json" if f_op == "1" else "csv"
             
-            tipo = "json" if f_op == "1" else "csv"
-            datos_f = carrito_compras.exportar_datos(nombre_cliente)
-            repo.guardar_factura_generica(nombre_factura, datos_f, tipo)
+            # Sacamos los datos del carrito para el reporte
+            datos_factura = carrito_compras.exportar_datos(cliente)
+            repo.guardar_factura_generica(nombre_archivo, datos_factura, formato_factura)
             
-            print("Venta finalizada con éxito.")
-            sistema_activo = False 
+            print("¡Gracias por su compra!")
+            sistema_encendido = False 
 
+        # 7. SALIR
         elif opcion == "7":
-            print("Saliendo del sistema...")
-            sistema_activo = False
+            print("Cerrando el sistema... ¡Hasta luego!")
+            sistema_encendido = False
 
 if __name__ == "__main__":
     main()
